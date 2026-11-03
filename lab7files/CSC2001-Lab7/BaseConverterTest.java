@@ -54,4 +54,14 @@ public class BaseConverterTest {
     //   - a loop over many values of n and every base 2-36 checking that
     //     toDecimal(toBase(n, base), base) == n, and that your answers match
     //     Integer.toString(n, base).toUpperCase()
+
+    void main()
+    {
+        IO.println(BaseConverter.digitValue((char) 1));
+        IO.println(BaseConverter.digitValue('A'));
+        IO.println(BaseConverter.digitValue('a'));
+
+
+
+    }
 }
