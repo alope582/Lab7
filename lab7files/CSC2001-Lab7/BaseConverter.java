@@ -41,11 +41,11 @@ public class BaseConverter {
      * Example: digitValue('7') is 7, digitValue('d') is 13, digitValue('?') is -1.
      */
     public static int digitValue(char ch) {
-        //TODO
-        if((int) ch <= 9) return (int) ch;
-        else {
-            return -1;
-        }
+        int ASCIICode = ch;
+        if(ASCIICode >= 48 && ASCIICode <= 59) return (ch - 48);    //0-9
+        else if(ASCIICode >= 65 && ASCIICode <= (65+25)) return (ch - 55);  //uppercase A-Z
+        else if(ASCIICode >= 97 && ASCIICode <= (97+25)) return (ch - 87);  //lowercase A-Z
+        return -1;
     }
 
     /**
