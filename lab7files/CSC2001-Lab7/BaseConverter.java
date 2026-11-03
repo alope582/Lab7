@@ -41,8 +41,11 @@ public class BaseConverter {
      * Example: digitValue('7') is 7, digitValue('d') is 13, digitValue('?') is -1.
      */
     public static int digitValue(char ch) {
-        // TODO
-        return -1;
+        //TODO
+        if((int) ch <= 9) return (int) ch;
+        else {
+            return -1;
+        }
     }
 
     /**
