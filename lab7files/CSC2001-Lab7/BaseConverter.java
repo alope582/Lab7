@@ -56,10 +56,19 @@ public class BaseConverter {
      * if the value is larger than Integer.MAX_VALUE
      */
     public static int toDecimal(String digits, int base) {
-        // TODO: check the base and the digits, then read the digits left to right:
-        //       value = value * base + digit
-        //       (keep value in a long so you can tell when it passes Integer.MAX_VALUE)
-        return 0;
+        //check the base and the digits, then read the digits left to right:
+        //value = value * base + digit
+        //(keep value in a long so you can tell when it passes Integer.MAX_VALUE)
+        if (base < MIN_BASE || base > MAX_BASE || digits == null || digits.isEmpty()) throw new IllegalArgumentException("invalid parameter(s)");
+        long value = 0;
+        for(int i=0; i<digits.length(); i++)
+        {
+            int digit = digitValue((digits.charAt(i)));
+            if(digit >= base) throw new IllegalArgumentException("not a valid digit");
+            value = value * base + digit;
+            if(value > Integer.MAX_VALUE) throw new IllegalArgumentException("aah too big!");
+        }
+        return (int) value;
     }
 
     // ---------------------------------------------------------------
