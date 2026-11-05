@@ -151,7 +151,13 @@ public class BaseConverter {
      */
     public static int countDigits(int n, int base) {
         // TODO: no loops - use recursion
-        return 0;
+        if (n < 0 || base < MIN_BASE || base > MAX_BASE) {
+            throw new IllegalArgumentException("Invalid input");
+        }
+        if (n < base) {
+            return 1;
+        }
+        return 1 + countDigits(n / base, base);
     }
 
     // ---------------------------------------------------------------
@@ -174,8 +180,20 @@ public class BaseConverter {
 
     /*
     1. How many calls does countDigits(n, 2) make (counting the first call) for n = 1, 2, 4, 8, 16, and 1024?
+        n:1     1
+        n:2     2
+        n:4     3
+        n:8     4
+        n:16    5
+        n:1024  11
     2. What is the Big-O of countDigits(n, base) and toBaseRec(n, base), in terms of n? Explain why.
+        countDigits is O(logn) because it is continuing to divide by the base stopping at 1
+            e.g. calls(n) = log_2(n)+1
+        toBaseRec is also O(logn) for similar reasons, it is continuing to divide recursively with a constant
+        **For both, the division is logn because it is reducing it by half (log_2)
     3. toBase needs a stack to get the digits in the right order, but toBaseRec does not. Where do the digits wait in the recursive version?
-    
+        In the recursive version, the digits wait in the stack of the computer (the memory stack not DS)
+        once it gets to the base case of the recursion function, it will go back up and clear out those values.
+
     */
 }
