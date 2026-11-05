@@ -132,4 +132,11 @@ public class BaseConverter {
     private static void checkNonNegative(int n) {
         // TODO
     }
+
+    /*
+    1. How many calls does countDigits(n, 2) make (counting the first call) for n = 1, 2, 4, 8, 16, and 1024?
+    2. What is the Big-O of countDigits(n, base) and toBaseRec(n, base), in terms of n? Explain why.
+    3. toBase needs a stack to get the digits in the right order, but toBaseRec does not. Where do the digits wait in the recursive version?
+    
+    */
 }
