@@ -82,8 +82,13 @@ public class BaseConverter {
      * throws IllegalArgumentException if value is not 0 to 35
      */
     public static char digitChar(int value) {
-        // TODO
-        return '?';
+        if(value < 0 || value > 35) throw new IllegalArgumentException("invalid parameter");
+        if(value <= 9 ){
+            return (char) (value + 48);
+        } else if(value >= 10 && value <= 35){
+            return (char) (value + 48);
+        }
+        return ((char)(value + 55));
     }
 
     /**
