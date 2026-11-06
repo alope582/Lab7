@@ -50,6 +50,9 @@ public class BaseConverterTest {
         assertEquals(22,BaseConverter.digitValue('m'));
         assertEquals(35,BaseConverter.digitValue('z'));
         assertEquals(-1,BaseConverter.digitValue(' '));
+        assertEquals(-1,BaseConverter.digitValue('/'));
+        assertEquals(-1,BaseConverter.digitValue(':'));
+        assertEquals(-1,BaseConverter.digitValue('@'));
         assertEquals(-1,BaseConverter.digitValue((char) 32));
         assertEquals(-1,BaseConverter.digitValue((char) 10));
         assertEquals(-1,BaseConverter.digitValue((char) 96));
@@ -80,19 +83,19 @@ public class BaseConverterTest {
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal(null, 10));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("", 10));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("10", 37));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("-45", 10));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("2147483648", 10));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("/", 10));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal((""+Integer.MAX_VALUE+1), 10));
+
     }
 
     @Test
     void testDigitChar() {
-        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("129", 8));
-        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("4 5", 10));
-        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal(null, 10));
-        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("", 10));
-        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("10", 37));
-        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("2147483648", 10));
+        assertEquals('0', BaseConverter.digitChar(0));
+        assertEquals('9', BaseConverter.digitChar(9));
+        assertEquals('A', BaseConverter.digitChar(10));
+        assertEquals('Z', BaseConverter.digitChar(35));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.digitChar(-1));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.digitChar(36));
     }
@@ -109,6 +112,7 @@ public class BaseConverterTest {
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBase(45,1));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBase(45,-1));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBase(45,38));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBase((Integer.MAX_VALUE+1), 10));
     }
 
     @Test
@@ -123,6 +127,7 @@ public class BaseConverterTest {
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBaseRec(45,1));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBaseRec(45,-1));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBaseRec(45,38));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBaseRec((Integer.MAX_VALUE+1), 10));
     }
 
     @Test
@@ -140,8 +145,17 @@ public class BaseConverterTest {
     @Test
     void loopToDecimal()
     {
-        for(int n=0; n<100; n+= (int) (Math.random() * 2))
+        for(int n=0; n<1000; n++)
         {
+            for(int base=2; base<=36; base++)
+            {
+                assertEquals(n, BaseConverter.toDecimal(BaseConverter.toBase(n,base),base));
+                assertEquals(Integer.toString(n, base).toUpperCase(), BaseConverter.toBase(n,base));
+            }
+        }
+        for(int n=0; n<100; n++)
+        {
+            int randomN = (int) (Math.random()*1000)+1000;
             for(int base=2; base<=36; base++)
             {
                 assertEquals(n, BaseConverter.toDecimal(BaseConverter.toBase(n,base),base));
@@ -152,29 +166,19 @@ public class BaseConverterTest {
 
 
     // TODO: add your own tests. At a minimum, cover:
-    //   - digitValue: digits, upper- and lowercase letters, and characters that
+    //   - !digitValue: digits, upper- and lowercase letters, and characters that
     //     are not digits (including the ones just before/after '0'-'9', 'A'-'Z', 'a'-'z')
-    //   - toDecimal: lowercase letters, "0" and leading zeros, base 2 and base 36,
+    //   - !toDecimal: lowercase letters, "0" and leading zeros, base 2 and base 36,
     //     Integer.MAX_VALUE in a few bases
-    //   - toDecimal throws IllegalArgumentException for: a digit too big for the
+    //   - !toDecimal throws IllegalArgumentException for: a digit too big for the
     //     base ("129" in base 8), a non-digit character ("-45", "4 5"), null,
     //     "", a bad base (1 or 37), and a value larger than Integer.MAX_VALUE
-    //   - digitChar: 0, 9, 10, 35, and -1 / 36 throwing
-    //   - toBase and toBaseRec: 0, single digits, powers of the base,
+    //   - !digitChar: 0, 9, 10, 35, and -1 / 36 throwing
+    //   - !toBase and toBaseRec: 0, single digits, powers of the base,
     //     Integer.MAX_VALUE, uppercase letters, negative n and bad bases throwing
-    //   - countDigits: 0, boundaries like 9/10 and 99/100, 1024 in base 2,
+    //   - !countDigits: 0, boundaries like 9/10 and 99/100, 1024 in base 2,
     //     negative n and bad bases throwing
-    //   - a loop over many values of n and every base 2-36 checking that
+    //   - !a loop over many values of n and every base 2-36 checking that
     //     toDecimal(toBase(n, base), base) == n, and that your answers match
     //     Integer.toString(n, base).toUpperCase()
-
-    void main()
-    {
-        IO.println(BaseConverter.digitValue((char) 1));
-        IO.println(BaseConverter.digitValue('A'));
-        IO.println(BaseConverter.digitValue('a'));
-
-
-
-    }
 }
