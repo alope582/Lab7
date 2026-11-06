@@ -82,6 +82,7 @@ public class BaseConverterTest {
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("10", 37));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("2147483648", 10));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("/", 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal((""+Integer.MAX_VALUE+1), 10));
     }
 
     @Test
@@ -123,6 +124,19 @@ public class BaseConverterTest {
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBaseRec(45,-1));
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBaseRec(45,38));
     }
+
+    @Test
+    void testCountDigits()
+    {
+        assertEquals(2, BaseConverter.countDigits(20,10));
+        assertEquals(2, BaseConverter.countDigits(10,10));
+        assertEquals(1, BaseConverter.countDigits(9,10));
+        assertEquals(11, BaseConverter.countDigits(1024,2));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.countDigits(45,-1));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.countDigits(45,1));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.countDigits(45,38));
+    }
+
 
     // TODO: add your own tests. At a minimum, cover:
     //   - digitValue: digits, upper- and lowercase letters, and characters that
