@@ -137,6 +137,19 @@ public class BaseConverterTest {
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.countDigits(45,38));
     }
 
+    @Test
+    void loopToDecimal()
+    {
+        for(int n=0; n<100; n+= (int) (Math.random() * 2))
+        {
+            for(int base=2; base<=36; base++)
+            {
+                assertEquals(n, BaseConverter.toDecimal(BaseConverter.toBase(n,base),base));
+                assertEquals(Integer.toString(n, base).toUpperCase(), BaseConverter.toBase(n,base));
+            }
+        }
+    }
+
 
     // TODO: add your own tests. At a minimum, cover:
     //   - digitValue: digits, upper- and lowercase letters, and characters that
