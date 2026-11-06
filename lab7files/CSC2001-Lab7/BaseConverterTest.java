@@ -96,6 +96,20 @@ public class BaseConverterTest {
         assertThrows(IllegalArgumentException.class, () -> BaseConverter.digitChar(36));
     }
 
+    @Test
+    void testToBase() {
+        assertEquals("101101", BaseConverter.toBase(45,2));
+        assertEquals("2D", BaseConverter.toBase(45,16));
+        assertEquals("0", BaseConverter.toBase(0,16));
+        assertEquals("1", BaseConverter.toBase(1,2));
+        assertEquals("10", BaseConverter.toBase(16,16));
+        assertEquals("10", BaseConverter.toBase(36,36));
+        assertEquals("Z", BaseConverter.toBase(35,36));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBase(45,1));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBase(45,-1));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toBase(45,38));
+    }
+
     // TODO: add your own tests. At a minimum, cover:
     //   - digitValue: digits, upper- and lowercase letters, and characters that
     //     are not digits (including the ones just before/after '0'-'9', 'A'-'Z', 'a'-'z')
