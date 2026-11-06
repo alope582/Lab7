@@ -40,9 +40,13 @@ public class BaseConverter {
      * 'A'-'Z' (or 'a'-'z') are 10-35. Returns -1 for any other character.
      * Example: digitValue('7') is 7, digitValue('d') is 13, digitValue('?') is -1.
      */
+    //the purpose of this method is to return a digit based on the base35
+    //@param: ch: char
+    //@return: int: representing the index
+    //test: digitValue('B') --> 11
     public static int digitValue(char ch) {
         int ASCIICode = ch;
-        if(ASCIICode >= 48 && ASCIICode <= 59) return (ch - 48);    //0-9
+        if(ASCIICode >= 48 && ASCIICode <= 57) return (ch - 48);    //0-9
         else if(ASCIICode >= 65 && ASCIICode <= (65+25)) return (ch - 55);  //uppercase A-Z
         else if(ASCIICode >= 97 && ASCIICode <= (97+25)) return (ch - 87);  //lowercase A-Z
         return -1;
@@ -55,6 +59,10 @@ public class BaseConverter {
      * null or empty, if any character is not a valid digit in that base, or
      * if the value is larger than Integer.MAX_VALUE
      */
+    //the purpose of this method is to convert the value in any base into a decimal value
+    //@param: digits: String, base: int
+    //@return: int: representing the decimal value
+    //test: toDecimal("2A", 16) --> 42
     public static int toDecimal(String digits, int base){
         checkBase(base); //using private helper checkBase
         if (digits == null || digits.isEmpty()){
@@ -84,14 +92,13 @@ public class BaseConverter {
      * Example: digitChar(13) is 'D'.
      * throws IllegalArgumentException if value is not 0 to 35
      */
+    //the purpose of this method is to return the value in base 36 from decimal
+    //@param: value: int
+    //@return: char: base 36
+    //test: digitChar(14) --> 'E'
     public static char digitChar(int value) {
-        if(value < 0 || value > 35) throw new IllegalArgumentException("invalid parameter");
-        if(value <= 9 ){
-            return (char) (value + 48);
-        } else if(value >= 10 && value <= 35){
-            return (char) (value + 48);
-        }
-        return ((char)(value + 55));
+        if (value < 0 || value > 35) throw new IllegalArgumentException("invalid parameter");
+        return DIGITS.charAt(value);
     }
 
     /**
@@ -102,6 +109,10 @@ public class BaseConverter {
      * Example: toBase(45, 2) is "101101", toBase(45, 16) is "2D".
      * throws IllegalArgumentException if n is negative or base is not 2 to 36
      */
+    //the purpose of this method is to change the value@base to another value@base using a stack
+    //@param: n: int, base: int
+    //@return: String: the new base value
+    //test: toBase(12, 16) -> "C"
     public static String toBase(int n, int base) {
         checkBase(base); //checking the base first
         checkNonNegative(n);
@@ -132,6 +143,10 @@ public class BaseConverter {
      * Example: toBaseRec(45, 3) is "1200".
      * throws IllegalArgumentException if n is negative or base is not 2 to 36
      */
+    //the purpose of this method is to change the value@base to another value@base using recursion
+    //@param: n: int, base: int
+    //@return: String: new base value
+    //@test: toBaseRec(12,16) -> "C"
     public static String toBaseRec(int n, int base) {
         checkBase(base);
         checkNonNegative(n);
@@ -149,11 +164,14 @@ public class BaseConverter {
      * Example: countDigits(4725, 10) is 4, countDigits(45, 2) is 6.
      * throws IllegalArgumentException if n is negative or base is not 2 to 36
      */
+    //the purpose of this method is to count the amount of digits needed to convert to a different base
+    //@param: n: int, base: int
+    //@return: int: the number of places/digits
+    //test: countDigits(20, 10) -> 2
     public static int countDigits(int n, int base) {
-        // TODO: no loops - use recursion
-        if (n < 0 || base < MIN_BASE || base > MAX_BASE) {
-            throw new IllegalArgumentException("Invalid input");
-        }
+        checkBase(base);
+        checkNonNegative(n);
+
         if (n < base) {
             return 1;
         }
@@ -165,6 +183,11 @@ public class BaseConverter {
     // ---------------------------------------------------------------
 
     /** Throws IllegalArgumentException unless base is 2 to 36. */
+    //the purpose of this method is to check if the base is between 2 and 36
+    //@param: base: int
+    //@return: void/none
+    //test checkBase(1) --> THROW
+    //test: checkBase(4) --> good
     private static void checkBase(int base) {
         if (base < MIN_BASE || base > MAX_BASE){
             throw new IllegalArgumentException("invalid base");
@@ -172,6 +195,11 @@ public class BaseConverter {
     }
 
     /** Throws IllegalArgumentException if n is negative. */
+    //the purpose of this method is to check if the number is negative
+    //@param: base: int
+    //@return: void/none
+    //test checkBase(-1) --> THROW
+    //test: checkBase(4) --> good
     private static void checkNonNegative(int n) {
         if (n < 0){
             throw new IllegalArgumentException("invalid value");
@@ -188,9 +216,9 @@ public class BaseConverter {
         n:1024  11
     2. What is the Big-O of countDigits(n, base) and toBaseRec(n, base), in terms of n? Explain why.
         countDigits is O(logn) because it is continuing to divide by the base stopping at 1
-            e.g. calls(n) = log_2(n)+1
+            e.g. calls(n) = log_base(n)+1
         toBaseRec is also O(logn) for similar reasons, it is continuing to divide recursively with a constant
-        **For both, the division is logn because it is reducing it by half (log_2)
+        **For both, the division is logn because it is reducing it by base (for base 2 it would be like log_2)
     3. toBase needs a stack to get the digits in the right order, but toBaseRec does not. Where do the digits wait in the recursive version?
         In the recursive version, the digits wait in the stack of the computer (the memory stack not DS)
         once it gets to the base case of the recursion function, it will go back up and clear out those values.
