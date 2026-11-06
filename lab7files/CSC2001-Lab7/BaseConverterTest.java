@@ -38,6 +38,64 @@ public class BaseConverterTest {
         assertEquals(2, BaseConverter.countDigits(45, 16));
     }
 
+    @Test
+    void testDigitValue() {
+        assertEquals(0,BaseConverter.digitValue('0'));
+        assertEquals(1,BaseConverter.digitValue('1'));
+        assertEquals(9,BaseConverter.digitValue('9'));
+        assertEquals(10,BaseConverter.digitValue('A'));
+        assertEquals(22,BaseConverter.digitValue('M'));
+        assertEquals(35,BaseConverter.digitValue('Z'));
+        assertEquals(10,BaseConverter.digitValue('a'));
+        assertEquals(22,BaseConverter.digitValue('m'));
+        assertEquals(35,BaseConverter.digitValue('z'));
+        assertEquals(-1,BaseConverter.digitValue(' '));
+        assertEquals(-1,BaseConverter.digitValue((char) 32));
+        assertEquals(-1,BaseConverter.digitValue((char) 10));
+        assertEquals(-1,BaseConverter.digitValue((char) 96));
+        assertEquals(-1,BaseConverter.digitValue((char) (97+28)));
+
+    }
+
+    @Test
+    void testToDecimal() {
+        assertEquals(2,BaseConverter.toDecimal("10",2));
+        assertEquals(6,BaseConverter.toDecimal("110",2));
+        assertEquals(0,BaseConverter.toDecimal("0",2));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("2", 2));
+        assertEquals(45,BaseConverter.toDecimal("2D",16));
+        assertEquals(31, BaseConverter.toDecimal("1f", 16));
+        assertEquals(35, BaseConverter.toDecimal("z", 36));
+        assertEquals(0, BaseConverter.toDecimal("0", 10));
+        assertEquals(0, BaseConverter.toDecimal("0000", 2));
+        assertEquals(42, BaseConverter.toDecimal("0042", 10));
+        assertEquals(31, BaseConverter.toDecimal("001f", 16));
+        assertEquals(1, BaseConverter.toDecimal("1", 2));
+        assertEquals(10, BaseConverter.toDecimal("1010", 2));
+        assertEquals(1, BaseConverter.toDecimal("1", 36));
+        assertEquals(56, BaseConverter.toDecimal("1k", 36));
+        assertEquals(2147483647, BaseConverter.toDecimal("7fffffff", 16));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("129", 8));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("4 5", 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal(null, 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("", 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("10", 37));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("2147483648", 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("/", 10));
+    }
+
+    @Test
+    void testDigitChar() {
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("129", 8));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("4 5", 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal(null, 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("", 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("10", 37));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.toDecimal("2147483648", 10));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.digitChar(-1));
+        assertThrows(IllegalArgumentException.class, () -> BaseConverter.digitChar(36));
+    }
+
     // TODO: add your own tests. At a minimum, cover:
     //   - digitValue: digits, upper- and lowercase letters, and characters that
     //     are not digits (including the ones just before/after '0'-'9', 'A'-'Z', 'a'-'z')
